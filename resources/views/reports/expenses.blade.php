@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Pengeluaran')
+@section('title', 'Laporan Biaya Operasional')
 
 @section('content')
 <div class="container-fluid">
@@ -8,7 +8,7 @@
     {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-start mb-3">
         <div>
-            <h5 class="fw-semibold text-dark mb-1">Laporan Pengeluaran</h5>
+            <h5 class="fw-semibold text-dark mb-1">Laporan Biaya Operasional</h5>
             <div class="text-muted small">
                 Rekap pengeluaran berdasarkan filter yang dipilih
             </div>

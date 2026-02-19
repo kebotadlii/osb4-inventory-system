@@ -73,14 +73,14 @@
                 </a>
             </li>
 
-            {{-- PENGELUARAN --}}
-            <div class="sidebar-title">Pengeluaran</div>
+            {{-- Biaya Operasional --}}
+            <div class="sidebar-title">Biaya Operasional</div>
 
             <li class="nav-item">
                 <a href="{{ route('expense.categories.index') }}"
                    class="nav-link {{ request()->routeIs('expense.categories.*') ? 'active' : '' }}">
                     <span class="icon"><i class="fas fa-layer-group"></i></span>
-                    <span class="text">Kategori Pengeluaran</span>
+                    <span class="text">Kategori Biaya</span>
                 </a>
             </li>
 
@@ -88,7 +88,7 @@
                 <a href="{{ route('expenses.index') }}"
                    class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
                     <span class="icon"><i class="fas fa-wallet"></i></span>
-                    <span class="text">Data Pengeluaran</span>
+                    <span class="text">Data Biaya</span>
                 </a>
             </li>
 
@@ -118,7 +118,7 @@
                 <a href="{{ route('reports.expenses') }}"
                    class="nav-link {{ request()->routeIs('reports.expenses') ? 'active' : '' }}">
                     <span class="icon"><i class="fas fa-chart-pie"></i></span>
-                    <span class="text">Laporan Pengeluaran</span>
+                    <span class="text">Laporan Biaya</span>
                 </a>
             </li>
 

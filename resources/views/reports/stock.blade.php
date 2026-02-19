@@ -5,9 +5,9 @@
 
     {{-- HEADER --}}
     <div class="mb-4">
-        <h4 class="fw-bold mb-1">Laporan Stok & Dana</h4>
+        <h4 class="fw-bold mb-1">Laporan Stok</h4>
         <div class="text-muted small">
-            Ringkasan stok, pengeluaran, dan total dana —
+            Ringkasan stok dan nilai barang —
             <span class="fw-semibold">
                 {{ $year === 'all' ? 'Semua Waktu' : 'Tahun ' . $year }}
             </span>
@@ -68,7 +68,7 @@
     <div class="row g-3 mb-4">
 
         {{-- BARANG MASUK --}}
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="fw-semibold mb-1">Total Nilai Barang Masuk</div>
@@ -83,7 +83,7 @@
         </div>
 
         {{-- STOK --}}
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="fw-semibold mb-1">Total Stok Saat Ini</div>
@@ -92,36 +92,6 @@
                     </h5>
                     <div class="small text-muted border-top pt-1">
                         Posisi stok real (semua waktu)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- PENGELUARAN --}}
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fw-semibold mb-1">Total Pengeluaran</div>
-                    <h5 class="fw-bold mb-1 text-danger">
-                        Rp {{ number_format($totalExpense, 0, ',', '.') }}
-                    </h5>
-                    <div class="small text-muted border-top pt-1">
-                        {{ $year === 'all' ? 'Semua Waktu' : 'Tahun ' . $year }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- TOTAL DANA --}}
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="fw-semibold mb-1">Total Dana Digunakan</div>
-                    <h5 class="fw-bold mb-1 text-success">
-                        Rp {{ number_format($totalDana, 0, ',', '.') }}
-                    </h5>
-                    <div class="small text-muted border-top pt-1">
-                        {{ $year === 'all' ? 'Semua Waktu' : 'Tahun ' . $year }}
                     </div>
                 </div>
             </div>
@@ -139,28 +109,9 @@
                         <th>No</th>
                         <th>Nama Barang</th>
                         <th>Kategori</th>
-
-                        <th class="text-end">
-                            Masuk
-                            <div class="text-muted small">
-                                {{ $year === 'all' ? 'Semua Waktu' : 'Tahun ' . $year }}
-                            </div>
-                        </th>
-
-                        <th class="text-end">
-                            Keluar
-                            <div class="text-muted small">
-                                {{ $year === 'all' ? 'Semua Waktu' : 'Tahun ' . $year }}
-                            </div>
-                        </th>
-
-                        <th class="text-end">
-                            Stok Saat Ini
-                            <div class="text-muted small">
-                                Real (semua waktu)
-                            </div>
-                        </th>
-
+                        <th class="text-end">Masuk</th>
+                        <th class="text-end">Keluar</th>
+                        <th class="text-end">Stok Saat Ini</th>
                         <th class="text-end">Harga</th>
                         <th class="text-end">Total Nilai</th>
                         <th class="text-center">Keterangan</th>

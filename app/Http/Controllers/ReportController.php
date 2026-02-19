@@ -17,9 +17,9 @@ use Carbon\Carbon;
 class ReportController extends Controller
 {
     /*
-    |------------------------------------------------------------------
-    | LAPORAN STOK & RINGKASAN DANA
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | LAPORAN STOK
+    |--------------------------------------------------------------------------
     */
     public function stock(Request $request)
     {
@@ -72,16 +72,6 @@ class ReportController extends Controller
             $totalInValue += $in->sum(fn ($t) => $t->quantity * $t->price);
         });
 
-        $totalExpense = Expense::when($year !== 'all', fn ($q) =>
-                $q->whereYear('expense_date', $year)
-            )
-            ->when($categoryId, fn ($q) =>
-                $q->where('expense_category_id', $categoryId)
-            )
-            ->sum('amount');
-
-        $totalDana = $totalInValue + $totalExpense;
-
         $items->getCollection()->transform(function ($item) use ($year) {
 
             $transactions = $item->transactions;
@@ -132,26 +122,23 @@ class ReportController extends Controller
             'year',
             'totalStockQty',
             'totalStockValue',
-            'totalInValue',
-            'totalExpense',
-            'totalDana'
+            'totalInValue'
         ));
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | LAPORAN PENGELUARAN
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function expenses(Request $request)
     {
-        // ⬅️ BIAR MASUK LANGSUNG ADA DATA
         $year = $request->filled('year')
             ? $request->year
             : now()->year;
 
         $month      = $request->month;
-        $categoryId = $request->category_id; // ✅ FINAL
+        $categoryId = $request->category_id;
 
         $query = Expense::with('category')
             ->whereYear('expense_date', $year);
@@ -166,7 +153,7 @@ class ReportController extends Controller
 
         $expenses = $query
             ->orderByDesc('expense_date')
-            ->paginate(30)
+            ->paginate(50)
             ->withQueryString();
 
         $totalExpense = (clone $query)->sum('amount');
@@ -182,35 +169,14 @@ class ReportController extends Controller
         ));
     }
 
-    /*
-    |------------------------------------------------------------------
-    | EXPORT LAPORAN PENGELUARAN
-    |------------------------------------------------------------------
-    */
     public function exportExpenses(Request $request)
     {
-        $year  = $request->year;
-        $month = $request->month;
-
-        if ($year && $month) {
-            $filename = "laporan_pengeluaran_{$year}_{$month}.xlsx";
-        } elseif ($year) {
-            $filename = "laporan_pengeluaran_{$year}.xlsx";
-        } else {
-            $filename = "laporan_pengeluaran_semua.xlsx";
-        }
-
         return Excel::download(
             new ExpensesExport($request),
-            $filename
+            'laporan_pengeluaran.xlsx'
         );
     }
 
-    /*
-    |------------------------------------------------------------------
-    | EXPORT LAPORAN STOK
-    |------------------------------------------------------------------
-    */
     public function exportStock(Request $request)
     {
         $categoryId = $request->filled('category_id')
