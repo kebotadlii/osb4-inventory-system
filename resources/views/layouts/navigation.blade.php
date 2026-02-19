@@ -88,7 +88,7 @@
                 <a href="{{ route('expenses.index') }}"
                    class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
                     <span class="icon"><i class="fas fa-wallet"></i></span>
-                    <span class="text">Data Biaya</span>
+                    <span class="text">Data Biaya Masuk</span>
                 </a>
             </li>
 
