@@ -45,7 +45,7 @@
     transform: translateX(4px);
 }
 
-/* ===== BARANG HABIS (MERAH LEBIH TEBAL) ===== */
+/* ===== BARANG HABIS ===== */
 .card-habis {
     background: linear-gradient(
         135deg,
@@ -59,7 +59,7 @@
         0 0 1.1rem rgba(220,53,69,.38);
 }
 
-/* ===== BARANG KRITIS (KUNING LEBIH TEBAL) ===== */
+/* ===== BARANG KRITIS ===== */
 .card-kritis {
     background: linear-gradient(
         135deg,
@@ -73,11 +73,9 @@
         0 0 1.1rem rgba(255,193,7,.45);
 }
 
-/* ===== INDICATOR BAR ===== */
 .card-habis { border-left: 8px solid #dc3545; }
 .card-kritis { border-left: 8px solid #ffc107; }
 
-/* ===== PULSE SUPER HALUS ===== */
 @keyframes pulse-soft {
     0%   { transform: scale(1); }
     50%  { transform: scale(1.035); }
@@ -143,7 +141,7 @@
 
         {{-- HABIS --}}
         <div class="col-md-6">
-            <a href="/items?filter=habis" class="text-decoration-none text-dark">
+            <a href="{{ route('items.all', ['filter' => 'habis']) }}" class="text-decoration-none text-dark">
                 <div class="card border-0 shadow-sm h-100 card-clickable card-habis
                     {{ $stockHabis > 0 ? 'pulse-soft' : '' }}">
                     <div class="card-body">
@@ -158,7 +156,7 @@
 
         {{-- KRITIS --}}
         <div class="col-md-6">
-            <a href="/items?filter=kritis" class="text-decoration-none text-dark">
+            <a href="{{ route('items.all', ['filter' => 'kritis']) }}" class="text-decoration-none text-dark">
                 <div class="card border-0 shadow-sm h-100 card-clickable card-kritis
                     {{ $stockKritis > 0 ? 'pulse-soft' : '' }}">
                     <div class="card-body">
