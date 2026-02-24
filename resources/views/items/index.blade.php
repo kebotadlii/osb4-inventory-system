@@ -8,10 +8,16 @@
 
         <div class="d-flex align-items-center gap-3">
 
+            {{-- BACK UNIVERSAL (selalu ada) --}}
+            <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('dashboard') }}"
+               class="btn btn-outline-secondary btn-sm">
+                ← Kembali
+            </a>
+
             @isset($category)
                 <a href="{{ route('categories.index') }}"
                    class="btn btn-outline-secondary btn-sm">
-                    ← Kembali
+                    ← Kategori
                 </a>
             @endisset
 
@@ -176,42 +182,37 @@
                             @endif
                         </td>
 
-                       {{-- ====== AKSI ====== --}}
-<td class="text-end">
-    <div class="d-inline-flex gap-1">
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
 
-        {{-- HISTORY --}}
-        <a href="{{ route('items.history', $item->id) }}"
-           class="btn btn-sm btn-outline-info">
-            History
-        </a>
+                                <a href="{{ route('items.history', $item->id) }}"
+                                   class="btn btn-sm btn-outline-info">
+                                    History
+                                </a>
 
-        {{-- EDIT --}}
-        <a href="{{ route('items.edit', $item->id) }}"
-           class="btn btn-sm btn-outline-primary">
-            Edit
-        </a>
+                                <a href="{{ route('items.edit', $item->id) }}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Edit
+                                </a>
 
-        {{-- DELETE --}}
-        @if($stock == 0)
-            <form action="{{ route('items.destroy', $item->id) }}"
-                  method="POST"
-                  onsubmit="return confirm('Yakin hapus item ini?')">
-                @csrf
-                @method('DELETE')
+                                @if($stock == 0)
+                                    <form action="{{ route('items.destroy', $item->id) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Yakin hapus item ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                @else
+                                    <button class="btn btn-sm btn-outline-secondary" disabled>
+                                        Hapus
+                                    </button>
+                                @endif
 
-                <button class="btn btn-sm btn-outline-danger">
-                    Hapus
-                </button>
-            </form>
-        @else
-            <button class="btn btn-sm btn-outline-secondary" disabled>
-                Hapus
-            </button>
-        @endif
-
-    </div>
-</td>
+                            </div>
+                        </td>
 
                     </tr>
 
@@ -223,7 +224,6 @@
                     </tr>
                 @endforelse
                 </tbody>
-
             </table>
         </div>
 
