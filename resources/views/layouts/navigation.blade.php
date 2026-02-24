@@ -22,7 +22,7 @@
 
     <hr class="border-secondary opacity-50">
 
-    {{-- MENU (SCROLL AREA) --}}
+    {{-- MENU --}}
     <div class="sidebar-scroll">
         <ul class="nav nav-pills flex-column mb-0">
 
@@ -47,7 +47,8 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('items.all') }}"
+                {{-- ✅ FIX DI SINI --}}
+                <a href="{{ route('items.index') }}"
                    class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}">
                     <span class="icon"><i class="fas fa-box"></i></span>
                     <span class="text">Data Barang</span>
@@ -73,7 +74,7 @@
                 </a>
             </li>
 
-            {{-- Biaya Operasional --}}
+            {{-- BIAYA OPERASIONAL --}}
             <div class="sidebar-title">Biaya Operasional</div>
 
             <li class="nav-item">

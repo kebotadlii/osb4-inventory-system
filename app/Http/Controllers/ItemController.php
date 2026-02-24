@@ -10,8 +10,6 @@ use App\Models\ItemTransaction;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
-
-// TAMBAHAN
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ItemImportTemplateExport;
 
@@ -36,7 +34,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | FORM IMPORT ITEM
+    | IMPORT FORM
     |--------------------------------------------------------------------------
     */
     public function importForm($categoryId)
@@ -47,7 +45,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | PROSES IMPORT ITEM
+    | IMPORT PROCESS
     |--------------------------------------------------------------------------
     */
     public function import(Request $request, $categoryId)
@@ -60,8 +58,6 @@ class ItemController extends Controller
 
         $spreadsheet = IOFactory::load($request->file('file')->getPathname());
         $rows = $spreadsheet->getActiveSheet()->toArray();
-
-        // hapus header
         unset($rows[0]);
 
         $totalImport = 0;
@@ -70,19 +66,7 @@ class ItemController extends Controller
 
             foreach ($rows as $row) {
 
-                /*
-                 | FORMAT EXCEL:
-                 | 0 = Nama Item
-                 | 1 = Jumlah
-                 | 2 = Harga
-                 | 3 = No PO
-                 | 4 = Tanggal
-                 | 5 = Keterangan
-                 */
-
-                if (empty($row[0]) || empty($row[1])) {
-                    continue;
-                }
+                if (empty($row[0]) || empty($row[1])) continue;
 
                 $item = Item::where('category_id', $category->id)
                     ->where('name', trim($row[0]))
@@ -99,7 +83,6 @@ class ItemController extends Controller
                     ]);
                 }
 
-                // parsing tanggal aman
                 $tanggal = null;
 
                 if (!empty($row[4])) {
@@ -142,12 +125,12 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | DOWNLOAD TEMPLATE (FIX – TANPA FILE PUBLIC)
+    | DOWNLOAD TEMPLATE
     |--------------------------------------------------------------------------
     */
     public function downloadTemplate($categoryId)
     {
-        Category::findOrFail($categoryId); // validasi aja
+        Category::findOrFail($categoryId);
 
         return Excel::download(
             new ItemImportTemplateExport(),
@@ -157,7 +140,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | ITEMS GLOBAL & CRUD (TIDAK DIUBAH)
+    | INDEX
     |--------------------------------------------------------------------------
     */
     public function index(Request $request)
@@ -184,24 +167,50 @@ class ItemController extends Controller
             $query->whereBetween('stock', [1, 9]);
         }
 
-        $items = $query->orderBy('name')->paginate(25)->withQueryString();
-        $categories = Category::orderBy('name')->get();
+        $items = $query->orderBy('name')
+            ->paginate(50)
+            ->withQueryString();
 
-        return view('items_all', compact(
+        $categories = Category::orderBy('name')->get();
+        $allItems   = Item::orderBy('name')->get(['id', 'name']);
+
+        return view('items.index', compact(
             'items',
             'categories',
             'totalItems',
             'stokHabis',
-            'stokKritis'
+            'stokKritis',
+            'allItems'
         ));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW (FIX 405 ERROR)
+    |--------------------------------------------------------------------------
+    */
+    public function show($id)
+    {
+        $item = Item::with('category')->findOrFail($id);
+        return view('items.show', compact('item'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
     public function create()
     {
         $categories = Category::orderBy('name')->get();
         return view('items.create', compact('categories'));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
     public function store(Request $request)
     {
         $request->validate([
@@ -214,29 +223,74 @@ class ItemController extends Controller
             'category_id' => $request->category_id,
             'name'        => $request->name,
             'price'       => $request->price ?? 0,
+            'stock'       => 0
         ]);
 
-        return redirect()->route('items.all')
+        return redirect()->route('items.index')
             ->with('success', 'Item berhasil ditambahkan.');
     }
 
-    public function updateItem(Request $request, $id)
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
+    public function edit($id)
     {
-        $request->validate([
-            'name'  => 'required|string|max:255',
-            'price' => 'nullable|numeric|min:0',
-        ]);
+        $item = Item::findOrFail($id);
+        $categories = Category::orderBy('name')->get();
 
-        Item::findOrFail($id)->update($request->only('name', 'price'));
-        return back()->with('success', 'Item berhasil diperbarui.');
+        return view('items.edit', compact('item', 'categories'));
     }
 
-    public function deleteItem($id)
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
+    public function update(Request $request, $id)
     {
-        Item::findOrFail($id)->delete();
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name'        => 'required|string|max:255',
+            'price'       => 'nullable|numeric|min:0',
+        ]);
+
+        $item = Item::findOrFail($id);
+
+        $item->update([
+            'category_id' => $request->category_id,
+            'name'        => $request->name,
+            'price'       => $request->price ?? 0,
+        ]);
+
+        return redirect()->route('items.index')
+            ->with('success', 'Item berhasil diperbarui.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DESTROY
+    |--------------------------------------------------------------------------
+    */
+    public function destroy($id)
+    {
+        $item = Item::withCount('transactions')->findOrFail($id);
+
+        if ($item->transactions_count > 0) {
+            return back()->with('error', 'Item tidak bisa dihapus karena sudah memiliki transaksi.');
+        }
+
+        $item->delete();
+
         return back()->with('success', 'Item berhasil dihapus.');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | HISTORY
+    |--------------------------------------------------------------------------
+    */
     public function history($id)
     {
         $item = Item::with('category')->findOrFail($id);

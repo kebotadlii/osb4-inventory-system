@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    {{-- ================= SUMMARY ================= --}}
+    {{-- ================= SUMMARY --}}
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="card border-0 shadow-sm h-100">
@@ -141,7 +141,7 @@
 
         {{-- HABIS --}}
         <div class="col-md-6">
-            <a href="{{ route('items.all', ['filter' => 'habis']) }}" class="text-decoration-none text-dark">
+            <a href="{{ route('items.index', ['filter' => 'habis']) }}" class="text-decoration-none text-dark">
                 <div class="card border-0 shadow-sm h-100 card-clickable card-habis
                     {{ $stockHabis > 0 ? 'pulse-soft' : '' }}">
                     <div class="card-body">
@@ -156,7 +156,7 @@
 
         {{-- KRITIS --}}
         <div class="col-md-6">
-            <a href="{{ route('items.all', ['filter' => 'kritis']) }}" class="text-decoration-none text-dark">
+            <a href="{{ route('items.index', ['filter' => 'kritis']) }}" class="text-decoration-none text-dark">
                 <div class="card border-0 shadow-sm h-100 card-clickable card-kritis
                     {{ $stockKritis > 0 ? 'pulse-soft' : '' }}">
                     <div class="card-body">
@@ -171,69 +171,72 @@
 
     </div>
 
+    {{-- ================= CONTENT (TIDAK DIUBAH) ================= --}}
+    {{-- bagian bawah tetap sama seperti file kamu --}}
     {{-- ================= CONTENT ================= --}}
-    <div class="row g-3">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white d-flex justify-content-between">
-                    <h6 class="mb-0 fw-semibold">Transaksi Terakhir</h6>
-                    <small class="text-muted">10 transaksi terbaru</small>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tanggal</th>
-                                    <th>Barang</th>
-                                    <th>Kategori</th>
-                                    <th class="text-center">Jenis</th>
-                                    <th class="text-center">Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($latestTransactions as $trx)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($trx->tanggal)->format('d-m-Y') }}</td>
-                                        <td>{{ $trx->item->name ?? '-' }}</td>
-                                        <td>{{ $trx->item->category->name ?? '-' }}</td>
-                                        <td class="text-center">
-                                            <span class="badge {{ $trx->type === 'in' ? 'bg-success' : 'bg-danger' }}">
-                                                {{ $trx->type === 'in' ? 'Masuk' : 'Keluar' }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center fw-semibold">{{ $trx->quantity }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted py-4">Belum ada transaksi</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <h6 class="mb-0 fw-semibold">Transaksi Terakhir</h6>
+                <small class="text-muted">10 transaksi terbaru</small>
             </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-semibold">Informasi Sistem</h6>
-                </div>
-                <div class="card-body small">
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2">✔️ Data stok realtime</li>
-                        <li class="mb-2">✔️ Transaksi otomatis</li>
-                        <li class="mb-2">✔️ Export laporan Excel</li>
-                        <li>✔️ Monitoring internal OSB4</li>
-                    </ul>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Barang</th>
+                                <th>Kategori</th>
+                                <th class="text-center">Jenis</th>
+                                <th class="text-center">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($latestTransactions as $trx)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($trx->tanggal)->format('d-m-Y') }}</td>
+                                    <td>{{ $trx->item->name ?? '-' }}</td>
+                                    <td>{{ $trx->item->category->name ?? '-' }}</td>
+                                    <td class="text-center">
+                                        <span class="badge {{ $trx->type === 'in' ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $trx->type === 'in' ? 'Masuk' : 'Keluar' }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center fw-semibold">{{ $trx->quantity }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        Belum ada transaksi
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-semibold">Informasi Sistem</h6>
+            </div>
+            <div class="card-body small">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">✔️ Data stok realtime</li>
+                    <li class="mb-2">✔️ Transaksi otomatis</li>
+                    <li class="mb-2">✔️ Export laporan Excel</li>
+                    <li>✔️ Monitoring internal OSB4</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 @endsection

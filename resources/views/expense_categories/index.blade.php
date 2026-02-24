@@ -70,7 +70,7 @@
                                         </a>
 
                                         {{-- DELETE --}}
-                                        <form action="{{ route('expense.categories.delete', $category->id) }}"
+                                        <form action="{{ route('expense.categories.destroy', $category->id) }}"
                                               method="POST"
                                               onsubmit="return confirm('Hapus kategori ini?')">
                                             @csrf

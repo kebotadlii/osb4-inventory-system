@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4">
 
-    <!-- HEADER -->
+    {{-- HEADER --}}
     <div class="row mb-4 align-items-center">
         <div class="col-md-8">
             <h3 class="fw-bold mb-1">Tambah Item</h3>
@@ -12,7 +12,7 @@
             </p>
         </div>
         <div class="col-md-4 text-end">
-            <a href="{{ route('items.all') }}" class="btn btn-secondary btn-sm">
+            <a href="{{ route('items.index') }}" class="btn btn-secondary btn-sm">
                 ← Kembali
             </a>
         </div>
@@ -21,7 +21,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
 
-            <!-- ALERT ERROR -->
+            {{-- ALERT ERROR --}}
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <strong>Gagal menyimpan data:</strong>
@@ -36,7 +36,7 @@
             <form action="{{ route('items.store') }}" method="POST">
                 @csrf
 
-                <!-- KATEGORI -->
+                {{-- KATEGORI --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">
                         Kategori <span class="text-danger">*</span>
@@ -52,7 +52,7 @@
                     </select>
                 </div>
 
-                <!-- NAMA ITEM -->
+                {{-- NAMA ITEM --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">
                         Nama Item <span class="text-danger">*</span>
@@ -67,7 +67,7 @@
                     >
                 </div>
 
-                <!-- HARGA -->
+                {{-- HARGA --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">
                         Harga (Opsional)
@@ -82,9 +82,9 @@
                     >
                 </div>
 
-                <!-- BUTTON -->
+                {{-- BUTTON --}}
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('items.all') }}" class="btn btn-light">
+                    <a href="{{ route('items.index') }}" class="btn btn-light">
                         Batal
                     </a>
                     <button type="submit" class="btn btn-primary">

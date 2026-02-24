@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | CATEGORIES + ITEMS PER CATEGORY
+    | CATEGORIES
     |--------------------------------------------------------------------------
     */
     Route::prefix('categories')->group(function () {
@@ -80,15 +80,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [ItemController::class, 'byCategory'])
                 ->name('categories.items');
 
-            // FORM IMPORT
             Route::get('/import', [ItemController::class, 'importForm'])
                 ->name('categories.items.import.form');
 
-            // PROCESS IMPORT
             Route::post('/import', [ItemController::class, 'import'])
                 ->name('categories.items.import.process');
 
-            // DOWNLOAD TEMPLATE
             Route::get('/import/template', [ItemController::class, 'downloadTemplate'])
                 ->name('categories.items.import.template');
         });
@@ -96,13 +93,13 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | ITEMS GLOBAL
+    | ITEMS GLOBAL (FIXED & CLEAN)
     |--------------------------------------------------------------------------
     */
     Route::prefix('items')->group(function () {
 
         Route::get('/', [ItemController::class, 'index'])
-            ->name('items.all');
+            ->name('items.index');
 
         Route::get('/create', [ItemController::class, 'create'])
             ->name('items.create');
@@ -110,14 +107,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ItemController::class, 'store'])
             ->name('items.store');
 
-        Route::put('/{id}', [ItemController::class, 'updateItem'])
+        // HISTORY (detail item utama)
+        Route::get('/{item}/history', [ItemController::class, 'history'])
+            ->name('items.history');
+
+        Route::get('/{item}/edit', [ItemController::class, 'edit'])
+            ->name('items.edit');
+
+        Route::put('/{item}', [ItemController::class, 'update'])
             ->name('items.update');
 
-        Route::delete('/{id}', [ItemController::class, 'deleteItem'])
-            ->name('items.delete');
-
-        Route::get('/{id}/history', [ItemController::class, 'history'])
-            ->name('items.history');
+        Route::delete('/{item}', [ItemController::class, 'destroy'])
+            ->name('items.destroy');
     });
 
     /*
@@ -127,32 +128,28 @@ Route::middleware('auth')->group(function () {
     */
     Route::prefix('transactions')->group(function () {
 
-        // STOCK IN
         Route::get('/in', [ItemTransactionController::class, 'createIn'])
             ->name('transactions.in.form');
 
         Route::post('/in', [ItemTransactionController::class, 'storeIn'])
             ->name('transactions.in.store');
 
-        // STOCK OUT
         Route::get('/out', [ItemTransactionController::class, 'createOut'])
             ->name('transactions.out.form');
 
         Route::post('/out', [ItemTransactionController::class, 'storeOut'])
             ->name('transactions.out.store');
 
-        // IMPORT STOCK OUT
         Route::post('/out/import', [ExcelController::class, 'importItemOut'])
             ->name('transactions.out.import');
 
-        // DOWNLOAD TEMPLATE STOCK OUT
         Route::get('/out/import/template', [ExcelController::class, 'downloadItemOutTemplate'])
             ->name('transactions.out.import.template');
     });
 
     /*
     |--------------------------------------------------------------------------
-    | HISTORY
+    | HISTORY GLOBAL
     |--------------------------------------------------------------------------
     */
     Route::get('/history', [HistoryController::class, 'index'])
@@ -200,16 +197,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ExpenseCategoryController::class, 'store'])
             ->name('expense.categories.store');
 
-        Route::delete('/{id}', [ExpenseCategoryController::class, 'destroy'])
-            ->name('expense.categories.delete');
+        Route::delete('/{expenseCategory}', [ExpenseCategoryController::class, 'destroy'])
+            ->name('expense.categories.destroy');
 
-        Route::get('/{id}/import', [ExpenseCategoryController::class, 'showImportForm'])
+        Route::get('/{expenseCategory}/import', [ExpenseCategoryController::class, 'showImportForm'])
             ->name('expense.categories.import.form');
 
-        Route::post('/{id}/import', [ExpenseCategoryController::class, 'import'])
+        Route::post('/{expenseCategory}/import', [ExpenseCategoryController::class, 'import'])
             ->name('expense.categories.import.process');
 
-        Route::get('/{id}/import/template', [ExpenseCategoryController::class, 'downloadTemplate'])
+        Route::get('/{expenseCategory}/import/template', [ExpenseCategoryController::class, 'downloadTemplate'])
             ->name('expense.categories.import.template');
     });
 
@@ -229,13 +226,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ExpenseController::class, 'store'])
             ->name('expenses.store');
 
-        Route::get('/{id}/edit', [ExpenseController::class, 'edit'])
+        Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])
             ->name('expenses.edit');
 
-        Route::put('/{id}', [ExpenseController::class, 'update'])
+        Route::put('/{expense}', [ExpenseController::class, 'update'])
             ->name('expenses.update');
 
-        Route::delete('/{id}', [ExpenseController::class, 'destroy'])
+        Route::delete('/{expense}', [ExpenseController::class, 'destroy'])
             ->name('expenses.destroy');
     });
+
 });
