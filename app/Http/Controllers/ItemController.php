@@ -34,7 +34,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | IMPORT FORM
+    | IMPORT FORM PER KATEGORI
     |--------------------------------------------------------------------------
     */
     public function importForm($categoryId)
@@ -45,7 +45,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | IMPORT PROCESS
+    | IMPORT PROCESS PER KATEGORI
     |--------------------------------------------------------------------------
     */
     public function import(Request $request, $categoryId)
@@ -92,7 +92,7 @@ class ItemController extends Controller
                                 ExcelDate::excelToDateTimeObject($row[4])
                             );
                         } else {
-                            foreach (['d/m/Y', 'Y-m-d', 'm/d/Y'] as $format) {
+                            foreach (['d/m/Y', 'Y-m-d', 'm/d/Y', 'd-m-Y'] as $format) {
                                 try {
                                     $tanggal = Carbon::createFromFormat($format, trim($row[4]));
                                     break;
@@ -125,13 +125,26 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | DOWNLOAD TEMPLATE
+    | DOWNLOAD TEMPLATE PER KATEGORI
     |--------------------------------------------------------------------------
     */
     public function downloadTemplate($categoryId)
     {
         Category::findOrFail($categoryId);
 
+        return Excel::download(
+            new ItemImportTemplateExport(),
+            'template_import_items.xlsx'
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | DOWNLOAD TEMPLATE GLOBAL (🔥 DITAMBAHKAN)
+    |--------------------------------------------------------------------------
+    */
+    public function downloadTemplateGlobal()
+    {
         return Excel::download(
             new ItemImportTemplateExport(),
             'template_import_items.xlsx'
@@ -186,7 +199,7 @@ class ItemController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | SHOW (FIX 405 ERROR)
+    | SHOW
     |--------------------------------------------------------------------------
     */
     public function show($id)

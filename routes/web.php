@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | ITEMS GLOBAL (FIXED & CLEAN)
+    | ITEMS GLOBAL
     |--------------------------------------------------------------------------
     */
     Route::prefix('items')->group(function () {
@@ -107,7 +107,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ItemController::class, 'store'])
             ->name('items.store');
 
-        // HISTORY (detail item utama)
+        /*
+        |--------------------------------------------------------------------------
+        | IMPORT GLOBAL ITEMS
+        |--------------------------------------------------------------------------
+        */
+        Route::post('/import', [ItemController::class, 'importGlobal'])
+            ->name('items.import');
+
+        Route::get('/import/template', [ItemController::class, 'downloadTemplateGlobal'])
+            ->name('items.import.template');
+
+        /*
+        |--------------------------------------------------------------------------
+        | HISTORY & CRUD
+        |--------------------------------------------------------------------------
+        */
         Route::get('/{item}/history', [ItemController::class, 'history'])
             ->name('items.history');
 

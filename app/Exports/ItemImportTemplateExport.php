@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class ItemImportTemplateExport implements FromArray, WithHeadings
 {
     /**
-     * Header Excel
+     * Header Excel (WAJIB SESUAI ItemsImport)
      */
     public function headings(): array
     {
@@ -23,7 +23,7 @@ class ItemImportTemplateExport implements FromArray, WithHeadings
     }
 
     /**
-     * Data kosong (template)
+     * Data kosong (template tanpa contoh)
      */
     public function array(): array
     {

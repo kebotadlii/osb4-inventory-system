@@ -8,7 +8,7 @@
 
         <div class="d-flex align-items-center gap-3">
 
-            {{-- BACK UNIVERSAL (selalu ada) --}}
+            {{-- BACK UNIVERSAL --}}
             <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('dashboard') }}"
                class="btn btn-outline-secondary btn-sm">
                 ← Kembali
@@ -36,20 +36,59 @@
 
         </div>
 
-        <div>
+        <div class="d-flex gap-2 align-items-center">
+
+            {{-- DOWNLOAD TEMPLATE --}}
+            @isset($category)
+                <a href="{{ route('categories.items.import.template', $category->id) }}"
+                   class="btn btn-outline-success btn-sm">
+                    Download Template
+                </a>
+            @else
+                <a href="{{ route('items.import.template') }}"
+                   class="btn btn-outline-success btn-sm">
+                    Download Template
+                </a>
+            @endisset
+
+
+            {{-- IMPORT --}}
+            <form action="{{ isset($category) 
+                                ? route('categories.items.import.process', $category->id) 
+                                : route('items.import') }}"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  class="d-flex gap-2 align-items-center">
+                @csrf
+                <input type="file"
+                       name="file"
+                       class="form-control form-control-sm"
+                       accept=".xlsx,.xls,.csv"
+                       required>
+                <button type="submit" class="btn btn-success btn-sm">
+                    Import
+                </button>
+            </form>
+
+            {{-- TAMBAH --}}
             <a href="{{ route('items.create') }}"
                class="btn btn-primary">
                 + Tambah Item
             </a>
+
         </div>
 
     </div>
 
-
     {{-- ================= FILTER & SEARCH ================= --}}
     <div class="card border-0 shadow-sm mb-3">
         <div class="card-body">
-            <form method="GET" action="{{ route('items.index') }}" class="row g-2">
+
+            <form method="GET"
+                  action="{{ isset($category) 
+                                ? route('categories.items', $category->id) 
+                                : route('items.index') }}"
+                  class="row g-2">
 
                 <div class="col-md-4">
                     <select name="search"
@@ -105,7 +144,6 @@
             </form>
         </div>
     </div>
-
 
     {{-- ================= TABLE ================= --}}
     <div class="card border-0 shadow-sm">
@@ -236,14 +274,12 @@
 </div>
 @endsection
 
-
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 @endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     new TomSelect('#search_item', {

@@ -239,7 +239,55 @@
 @include('layouts.navigation')
 
 <main>
+
+    {{-- ✅ GLOBAL ALERT --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-check-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-exclamation-triangle me-2"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('warning'))
+        <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-triangle-exclamation me-2"></i>
+            {{ session('warning') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('info'))
+        <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-circle-info me-2"></i>
+            {{ session('info') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- VALIDATION ERROR --}}
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa fa-exclamation-circle me-2"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     @yield('content')
+
 </main>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -247,7 +295,6 @@
 
 @stack('scripts')
 
-{{-- 🔑 SCRIPT TAMBAHAN (AMAN) --}}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById('sidebar');
@@ -256,21 +303,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!sidebar || !scrollArea) return;
 
-    // restore scroll
     const savedScroll = localStorage.getItem('sidebar-scroll');
     if (savedScroll !== null) {
         scrollArea.scrollTop = parseInt(savedScroll);
     }
 
-    // save scroll
     scrollArea.addEventListener('scroll', () => {
         localStorage.setItem('sidebar-scroll', scrollArea.scrollTop);
     });
 
-    // toggle collapse (punyamu tetap dipakai)
     toggle?.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
     });
+
+    // ✅ AUTO HIDE ALERT 3 DETIK
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 3000);
 });
 </script>
 
