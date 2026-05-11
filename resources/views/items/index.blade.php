@@ -38,37 +38,34 @@
 
         <div class="d-flex gap-2 align-items-center">
 
-            {{-- DOWNLOAD TEMPLATE --}}
+            {{-- IMPORT HANYA DI HALAMAN KATEGORI --}}
             @isset($category)
+
+                {{-- DOWNLOAD TEMPLATE --}}
                 <a href="{{ route('categories.items.import.template', $category->id) }}"
                    class="btn btn-outline-success btn-sm">
                     Download Template
                 </a>
-            @else
-                <a href="{{ route('items.import.template') }}"
-                   class="btn btn-outline-success btn-sm">
-                    Download Template
-                </a>
+
+                {{-- IMPORT --}}
+                <form action="{{ route('categories.items.import.process', $category->id) }}"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      class="d-flex gap-2 align-items-center">
+                    @csrf
+
+                    <input type="file"
+                           name="file"
+                           class="form-control form-control-sm"
+                           accept=".xlsx,.xls,.csv"
+                           required>
+
+                    <button type="submit" class="btn btn-success btn-sm">
+                        Import
+                    </button>
+                </form>
+
             @endisset
-
-
-            {{-- IMPORT --}}
-            <form action="{{ isset($category) 
-                                ? route('categories.items.import.process', $category->id) 
-                                : route('items.import') }}"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  class="d-flex gap-2 align-items-center">
-                @csrf
-                <input type="file"
-                       name="file"
-                       class="form-control form-control-sm"
-                       accept=".xlsx,.xls,.csv"
-                       required>
-                <button type="submit" class="btn btn-success btn-sm">
-                    Import
-                </button>
-            </form>
 
             {{-- TAMBAH --}}
             <a href="{{ route('items.create') }}"
@@ -85,8 +82,8 @@
         <div class="card-body">
 
             <form method="GET"
-                  action="{{ isset($category) 
-                                ? route('categories.items', $category->id) 
+                  action="{{ isset($category)
+                                ? route('categories.items', $category->id)
                                 : route('items.index') }}"
                   class="row g-2">
 
@@ -113,6 +110,7 @@
                 <div class="col-md-3">
                     <select name="category_id" class="form-select">
                         <option value="">Semua Kategori</option>
+
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}"
                                 {{ request('category_id') == $cat->id ? 'selected' : '' }}>
@@ -126,10 +124,14 @@
                 <div class="col-md-3">
                     <select name="filter" class="form-select">
                         <option value="">Semua Status</option>
-                        <option value="habis" {{ request('filter') == 'habis' ? 'selected' : '' }}>
+
+                        <option value="habis"
+                            {{ request('filter') == 'habis' ? 'selected' : '' }}>
                             Habis
                         </option>
-                        <option value="kritis" {{ request('filter') == 'kritis' ? 'selected' : '' }}>
+
+                        <option value="kritis"
+                            {{ request('filter') == 'kritis' ? 'selected' : '' }}>
                             Kritis
                         </option>
                     </select>
@@ -150,6 +152,7 @@
 
         <div class="card-body table-responsive p-0">
             <table class="table table-hover align-middle mb-0">
+
                 <thead class="table-light">
                     <tr>
                         <th width="60">No</th>
@@ -188,6 +191,7 @@
                     @endphp
 
                     <tr class="{{ $rowClass }}">
+
                         <td>
                             {{ $loop->iteration + ($items->currentPage() - 1) * $items->perPage() }}
                         </td>
@@ -237,8 +241,10 @@
                                     <form action="{{ route('items.destroy', $item->id) }}"
                                           method="POST"
                                           onsubmit="return confirm('Yakin hapus item ini?')">
+
                                         @csrf
                                         @method('DELETE')
+
                                         <button class="btn btn-sm btn-outline-danger">
                                             Hapus
                                         </button>
@@ -256,12 +262,14 @@
 
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="7"
+                            class="text-center text-muted py-4">
                             Tidak ada data
                         </td>
                     </tr>
                 @endforelse
                 </tbody>
+
             </table>
         </div>
 
@@ -280,14 +288,17 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
     new TomSelect('#search_item', {
         placeholder: 'Ketik nama barang...',
         allowEmptyOption: true,
         maxOptions: 10,
         closeAfterSelect: true
     });
+
 });
 </script>
 @endpush

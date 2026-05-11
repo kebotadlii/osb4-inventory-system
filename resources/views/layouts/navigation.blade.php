@@ -35,76 +35,85 @@
                 </a>
             </li>
 
-            {{-- MASTER DATA --}}
-            <div class="sidebar-title">Master Data</div>
+            {{-- ADMIN ONLY --}}
+            @if(Auth::user()->role == 'admin')
 
-            <li class="nav-item">
-                <a href="{{ route('categories.index') }}"
-                   class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-tags"></i></span>
-                    <span class="text">Kategori Barang</span>
-                </a>
-            </li>
+                {{-- MASTER DATA --}}
+                <div class="sidebar-title">Master Data</div>
 
-            <li class="nav-item">
-                {{-- ✅ FIX DI SINI --}}
-                <a href="{{ route('items.index') }}"
-                   class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-box"></i></span>
-                    <span class="text">Data Barang</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('categories.index') }}"
+                       class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-tags"></i></span>
+                        <span class="text">Kategori Barang</span>
+                    </a>
+                </li>
 
-            {{-- TRANSAKSI BARANG --}}
-            <div class="sidebar-title">Transaksi Barang</div>
+                <li class="nav-item">
+                    <a href="{{ route('items.index') }}"
+                       class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-box"></i></span>
+                        <span class="text">Data Barang</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="{{ route('transactions.in.form') }}"
-                   class="nav-link {{ request()->routeIs('transactions.in*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-arrow-down"></i></span>
-                    <span class="text">Barang Masuk</span>
-                </a>
-            </li>
+                {{-- BIAYA OPERASIONAL --}}
+                <div class="sidebar-title">Biaya Operasional</div>
 
-            <li class="nav-item">
-                <a href="{{ route('transactions.out.form') }}"
-                   class="nav-link {{ request()->routeIs('transactions.out*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-arrow-up"></i></span>
-                    <span class="text">Barang Keluar</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('expense.categories.index') }}"
+                       class="nav-link {{ request()->routeIs('expense.categories.*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-layer-group"></i></span>
+                        <span class="text">Kategori Biaya</span>
+                    </a>
+                </li>
 
-            {{-- BIAYA OPERASIONAL --}}
-            <div class="sidebar-title">Biaya Operasional</div>
+                <li class="nav-item">
+                    <a href="{{ route('expenses.index') }}"
+                       class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-wallet"></i></span>
+                        <span class="text">Data Biaya Masuk</span>
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="{{ route('expense.categories.index') }}"
-                   class="nav-link {{ request()->routeIs('expense.categories.*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-layer-group"></i></span>
-                    <span class="text">Kategori Biaya</span>
-                </a>
-            </li>
+            @endif
 
-            <li class="nav-item">
-                <a href="{{ route('expenses.index') }}"
-                   class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-wallet"></i></span>
-                    <span class="text">Data Biaya Masuk</span>
-                </a>
-            </li>
+            {{-- ADMIN & STAFF --}}
+            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
 
-            {{-- RIWAYAT --}}
-            <div class="sidebar-title">Riwayat</div>
+                {{-- TRANSAKSI BARANG --}}
+                <div class="sidebar-title">Transaksi Barang</div>
 
-            <li class="nav-item">
-                <a href="{{ route('history.index') }}"
-                   class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
-                    <span class="icon"><i class="fas fa-clock-rotate-left"></i></span>
-                    <span class="text">Riwayat Transaksi</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a href="{{ route('transactions.in.form') }}"
+                       class="nav-link {{ request()->routeIs('transactions.in*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-arrow-down"></i></span>
+                        <span class="text">Barang Masuk</span>
+                    </a>
+                </li>
 
-            {{-- LAPORAN --}}
+                <li class="nav-item">
+                    <a href="{{ route('transactions.out.form') }}"
+                       class="nav-link {{ request()->routeIs('transactions.out*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-arrow-up"></i></span>
+                        <span class="text">Barang Keluar</span>
+                    </a>
+                </li>
+
+                {{-- RIWAYAT --}}
+                <div class="sidebar-title">Riwayat</div>
+
+                <li class="nav-item">
+                    <a href="{{ route('history.index') }}"
+                       class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
+                        <span class="icon"><i class="fas fa-clock-rotate-left"></i></span>
+                        <span class="text">Riwayat Transaksi</span>
+                    </a>
+                </li>
+
+            @endif
+
+            {{-- SEMUA ROLE --}}
             <div class="sidebar-title">Laporan</div>
 
             <li class="nav-item">
@@ -134,32 +143,42 @@
             <a href="#"
                class="nav-link d-flex align-items-center dropdown-toggle"
                data-bs-toggle="dropdown">
+
                 <span class="icon">
                     <span class="badge bg-primary rounded-circle p-2">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </span>
                 </span>
+
                 <span class="text">
                     {{ Auth::user()->name }}<br>
-                    <small class="text-muted">User</small>
+
+                    <small class="text-muted">
+                        {{ ucfirst(Auth::user()->role) }}
+                    </small>
                 </span>
             </a>
 
             <ul class="dropdown-menu dropdown-menu-dark shadow w-100">
+
                 <li>
                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
                         <i class="fas fa-user me-2"></i> Profile
                     </a>
                 </li>
+
                 <li><hr class="dropdown-divider"></li>
+
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
+
                         <button class="dropdown-item text-danger">
                             <i class="fas fa-right-from-bracket me-2"></i> Logout
                         </button>
                     </form>
                 </li>
+
             </ul>
         </div>
     </div>

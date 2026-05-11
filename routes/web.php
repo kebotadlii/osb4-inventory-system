@@ -49,206 +49,220 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('profile')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        Route::get('/', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
+
+        Route::patch('/', [ProfileController::class, 'update'])
+            ->name('profile.update');
+
+        Route::delete('/', [ProfileController::class, 'destroy'])
+            ->name('profile.destroy');
     });
 
     /*
     |--------------------------------------------------------------------------
-    | CATEGORIES
+    | ADMIN ONLY
     |--------------------------------------------------------------------------
     */
-    Route::prefix('categories')->group(function () {
-
-        Route::get('/', [CategoryController::class, 'index'])
-            ->name('categories.index');
-
-        Route::get('/create', [CategoryController::class, 'create'])
-            ->name('categories.create');
-
-        Route::post('/', [CategoryController::class, 'store'])
-            ->name('categories.store');
+    Route::middleware('role:admin')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | ITEMS BY CATEGORY
+        | CATEGORIES
         |--------------------------------------------------------------------------
         */
-        Route::prefix('{category}/items')->group(function () {
+        Route::prefix('categories')->group(function () {
 
-            Route::get('/', [ItemController::class, 'byCategory'])
-                ->name('categories.items');
+            Route::get('/', [CategoryController::class, 'index'])
+                ->name('categories.index');
 
-            Route::get('/import', [ItemController::class, 'importForm'])
-                ->name('categories.items.import.form');
+            Route::get('/create', [CategoryController::class, 'create'])
+                ->name('categories.create');
 
-            Route::post('/import', [ItemController::class, 'import'])
-                ->name('categories.items.import.process');
+            Route::post('/', [CategoryController::class, 'store'])
+                ->name('categories.store');
 
-            Route::get('/import/template', [ItemController::class, 'downloadTemplate'])
-                ->name('categories.items.import.template');
+            /*
+            |--------------------------------------------------------------------------
+            | ITEMS BY CATEGORY
+            |--------------------------------------------------------------------------
+            */
+            Route::prefix('{category}/items')->group(function () {
+
+                Route::get('/', [ItemController::class, 'byCategory'])
+                    ->name('categories.items');
+
+                Route::get('/import', [ItemController::class, 'importForm'])
+                    ->name('categories.items.import.form');
+
+                Route::post('/import', [ItemController::class, 'import'])
+                    ->name('categories.items.import.process');
+
+                Route::get('/import/template', [ItemController::class, 'downloadTemplate'])
+                    ->name('categories.items.import.template');
+            });
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | ITEMS GLOBAL
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('items')->group(function () {
+
+            Route::get('/', [ItemController::class, 'index'])
+                ->name('items.index');
+
+            Route::get('/create', [ItemController::class, 'create'])
+                ->name('items.create');
+
+            Route::post('/', [ItemController::class, 'store'])
+                ->name('items.store');
+
+            Route::get('/{item}/history', [ItemController::class, 'history'])
+                ->name('items.history');
+
+            Route::get('/{item}/edit', [ItemController::class, 'edit'])
+                ->name('items.edit');
+
+            Route::put('/{item}', [ItemController::class, 'update'])
+                ->name('items.update');
+
+            Route::delete('/{item}', [ItemController::class, 'destroy'])
+                ->name('items.destroy');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | EXPENSE CATEGORIES
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('expense-categories')->group(function () {
+
+            Route::get('/', [ExpenseCategoryController::class, 'index'])
+                ->name('expense.categories.index');
+
+            Route::get('/create', [ExpenseCategoryController::class, 'create'])
+                ->name('expense.categories.create');
+
+            Route::post('/', [ExpenseCategoryController::class, 'store'])
+                ->name('expense.categories.store');
+
+            Route::delete('/{expenseCategory}', [ExpenseCategoryController::class, 'destroy'])
+                ->name('expense.categories.destroy');
+
+            Route::get('/{expenseCategory}/import', [ExpenseCategoryController::class, 'showImportForm'])
+                ->name('expense.categories.import.form');
+
+            Route::post('/{expenseCategory}/import', [ExpenseCategoryController::class, 'import'])
+                ->name('expense.categories.import.process');
+
+            Route::get('/{expenseCategory}/import/template', [ExpenseCategoryController::class, 'downloadTemplate'])
+                ->name('expense.categories.import.template');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | EXPENSES
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('expenses')->group(function () {
+
+            Route::get('/', [ExpenseController::class, 'index'])
+                ->name('expenses.index');
+
+            Route::get('/create', [ExpenseController::class, 'create'])
+                ->name('expenses.create');
+
+            Route::post('/', [ExpenseController::class, 'store'])
+                ->name('expenses.store');
+
+            Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])
+                ->name('expenses.edit');
+
+            Route::put('/{expense}', [ExpenseController::class, 'update'])
+                ->name('expenses.update');
+
+            Route::delete('/{expense}', [ExpenseController::class, 'destroy'])
+                ->name('expenses.destroy');
         });
     });
 
     /*
     |--------------------------------------------------------------------------
-    | ITEMS GLOBAL
+    | ADMIN & STAFF
     |--------------------------------------------------------------------------
     */
-    Route::prefix('items')->group(function () {
-
-        Route::get('/', [ItemController::class, 'index'])
-            ->name('items.index');
-
-        Route::get('/create', [ItemController::class, 'create'])
-            ->name('items.create');
-
-        Route::post('/', [ItemController::class, 'store'])
-            ->name('items.store');
+    Route::middleware('role:admin,staff')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | IMPORT GLOBAL ITEMS
+        | TRANSACTIONS
         |--------------------------------------------------------------------------
         */
-        Route::post('/import', [ItemController::class, 'importGlobal'])
-            ->name('items.import');
+        Route::prefix('transactions')->group(function () {
 
-        Route::get('/import/template', [ItemController::class, 'downloadTemplateGlobal'])
-            ->name('items.import.template');
+            Route::get('/in', [ItemTransactionController::class, 'createIn'])
+                ->name('transactions.in.form');
+
+            Route::post('/in', [ItemTransactionController::class, 'storeIn'])
+                ->name('transactions.in.store');
+
+            Route::get('/out', [ItemTransactionController::class, 'createOut'])
+                ->name('transactions.out.form');
+
+            Route::post('/out', [ItemTransactionController::class, 'storeOut'])
+                ->name('transactions.out.store');
+
+            Route::post('/out/import', [ExcelController::class, 'importItemOut'])
+                ->name('transactions.out.import');
+
+            Route::get('/out/import/template', [ExcelController::class, 'downloadItemOutTemplate'])
+                ->name('transactions.out.import.template');
+        });
 
         /*
         |--------------------------------------------------------------------------
-        | HISTORY & CRUD
+        | HISTORY
         |--------------------------------------------------------------------------
         */
-        Route::get('/{item}/history', [ItemController::class, 'history'])
-            ->name('items.history');
+        Route::get('/history', [HistoryController::class, 'index'])
+            ->name('history.index');
 
-        Route::get('/{item}/edit', [ItemController::class, 'edit'])
-            ->name('items.edit');
-
-        Route::put('/{item}', [ItemController::class, 'update'])
-            ->name('items.update');
-
-        Route::delete('/{item}', [ItemController::class, 'destroy'])
-            ->name('items.destroy');
+        Route::get('/history/export', [HistoryController::class, 'export'])
+            ->name('history.export');
     });
 
     /*
     |--------------------------------------------------------------------------
-    | TRANSACTIONS
+    | ADMIN, STAFF, KEPALA
     |--------------------------------------------------------------------------
     */
-    Route::prefix('transactions')->group(function () {
+    Route::middleware('role:admin,staff,kepala')->group(function () {
 
-        Route::get('/in', [ItemTransactionController::class, 'createIn'])
-            ->name('transactions.in.form');
+        /*
+        |--------------------------------------------------------------------------
+        | REPORTS
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('reports')->group(function () {
 
-        Route::post('/in', [ItemTransactionController::class, 'storeIn'])
-            ->name('transactions.in.store');
+            Route::get('/', [ReportController::class, 'stock'])
+                ->name('reports.index');
 
-        Route::get('/out', [ItemTransactionController::class, 'createOut'])
-            ->name('transactions.out.form');
+            Route::get('/stock', [ReportController::class, 'stock'])
+                ->name('reports.stock');
 
-        Route::post('/out', [ItemTransactionController::class, 'storeOut'])
-            ->name('transactions.out.store');
+            Route::get('/stock/export', [ReportController::class, 'exportStock'])
+                ->name('reports.stock.export');
 
-        Route::post('/out/import', [ExcelController::class, 'importItemOut'])
-            ->name('transactions.out.import');
+            Route::get('/expenses', [ReportController::class, 'expenses'])
+                ->name('reports.expenses');
 
-        Route::get('/out/import/template', [ExcelController::class, 'downloadItemOutTemplate'])
-            ->name('transactions.out.import.template');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | HISTORY GLOBAL
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/history', [HistoryController::class, 'index'])
-        ->name('history.index');
-
-    Route::get('/history/export', [HistoryController::class, 'export'])
-        ->name('history.export');
-
-    /*
-    |--------------------------------------------------------------------------
-    | REPORTS
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('reports')->group(function () {
-
-        Route::get('/', [ReportController::class, 'stock'])
-            ->name('reports.index');
-
-        Route::get('/stock', [ReportController::class, 'stock'])
-            ->name('reports.stock');
-
-        Route::get('/stock/export', [ReportController::class, 'exportStock'])
-            ->name('reports.stock.export');
-
-        Route::get('/expenses', [ReportController::class, 'expenses'])
-            ->name('reports.expenses');
-
-        Route::get('/expenses/export', [ReportController::class, 'exportExpenses'])
-            ->name('reports.expenses.export');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | EXPENSE CATEGORIES
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('expense-categories')->group(function () {
-
-        Route::get('/', [ExpenseCategoryController::class, 'index'])
-            ->name('expense.categories.index');
-
-        Route::get('/create', [ExpenseCategoryController::class, 'create'])
-            ->name('expense.categories.create');
-
-        Route::post('/', [ExpenseCategoryController::class, 'store'])
-            ->name('expense.categories.store');
-
-        Route::delete('/{expenseCategory}', [ExpenseCategoryController::class, 'destroy'])
-            ->name('expense.categories.destroy');
-
-        Route::get('/{expenseCategory}/import', [ExpenseCategoryController::class, 'showImportForm'])
-            ->name('expense.categories.import.form');
-
-        Route::post('/{expenseCategory}/import', [ExpenseCategoryController::class, 'import'])
-            ->name('expense.categories.import.process');
-
-        Route::get('/{expenseCategory}/import/template', [ExpenseCategoryController::class, 'downloadTemplate'])
-            ->name('expense.categories.import.template');
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | EXPENSES
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('expenses')->group(function () {
-
-        Route::get('/', [ExpenseController::class, 'index'])
-            ->name('expenses.index');
-
-        Route::get('/create', [ExpenseController::class, 'create'])
-            ->name('expenses.create');
-
-        Route::post('/', [ExpenseController::class, 'store'])
-            ->name('expenses.store');
-
-        Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])
-            ->name('expenses.edit');
-
-        Route::put('/{expense}', [ExpenseController::class, 'update'])
-            ->name('expenses.update');
-
-        Route::delete('/{expense}', [ExpenseController::class, 'destroy'])
-            ->name('expenses.destroy');
+            Route::get('/expenses/export', [ReportController::class, 'exportExpenses'])
+                ->name('reports.expenses.export');
+        });
     });
 
 });

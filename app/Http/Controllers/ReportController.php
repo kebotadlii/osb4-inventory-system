@@ -61,6 +61,7 @@ class ReportController extends Controller
         $totalInValue = 0;
 
         (clone $itemsQuery)->get()->each(function ($item) use (&$totalInValue, $year) {
+
             $in = $item->transactions->where('type', 'in');
 
             if ($year !== 'all') {
@@ -69,7 +70,9 @@ class ReportController extends Controller
                 );
             }
 
-            $totalInValue += $in->sum(fn ($t) => $t->quantity * $t->price);
+            $totalInValue += $in->sum(fn ($t) =>
+                $t->quantity * $t->price
+            );
         });
 
         $items->getCollection()->transform(function ($item) use ($year) {
@@ -157,7 +160,8 @@ class ReportController extends Controller
             ->withQueryString();
 
         $totalExpense = (clone $query)->sum('amount');
-        $categories   = ExpenseCategory::orderBy('name')->get();
+
+        $categories = ExpenseCategory::orderBy('name')->get();
 
         return view('reports.expenses', compact(
             'expenses',
@@ -169,6 +173,11 @@ class ReportController extends Controller
         ));
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | EXPORT PENGELUARAN
+    |--------------------------------------------------------------------------
+    */
     public function exportExpenses(Request $request)
     {
         return Excel::download(
@@ -177,14 +186,21 @@ class ReportController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | EXPORT STOK
+    |--------------------------------------------------------------------------
+    */
     public function exportStock(Request $request)
     {
         $categoryId = $request->filled('category_id')
             ? (int) $request->category_id
             : null;
 
+        $year = $request->get('year', now()->year);
+
         return Excel::download(
-            new StockReportExport($categoryId),
+            new StockReportExport($categoryId, $year),
             'laporan_stok_' . now()->format('Y-m-d') . '.xlsx'
         );
     }
