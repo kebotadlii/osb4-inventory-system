@@ -79,39 +79,44 @@
             @endif
 
             {{-- ADMIN & STAFF --}}
-            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
+@if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
 
-                {{-- TRANSAKSI BARANG --}}
-                <div class="sidebar-title">Transaksi Barang</div>
+    {{-- TRANSAKSI BARANG --}}
+    <div class="sidebar-title">Transaksi Barang</div>
 
-                <li class="nav-item">
-                    <a href="{{ route('transactions.in.form') }}"
-                       class="nav-link {{ request()->routeIs('transactions.in*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-arrow-down"></i></span>
-                        <span class="text">Barang Masuk</span>
-                    </a>
-                </li>
+    <li class="nav-item">
+        <a href="{{ route('transactions.in.form') }}"
+           class="nav-link {{ request()->routeIs('transactions.in*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-arrow-down"></i></span>
+            <span class="text">Barang Masuk</span>
+        </a>
+    </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('transactions.out.form') }}"
-                       class="nav-link {{ request()->routeIs('transactions.out*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-arrow-up"></i></span>
-                        <span class="text">Barang Keluar</span>
-                    </a>
-                </li>
+    <li class="nav-item">
+        <a href="{{ route('transactions.out.form') }}"
+           class="nav-link {{ request()->routeIs('transactions.out*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-arrow-up"></i></span>
+            <span class="text">Barang Keluar</span>
+        </a>
+    </li>
 
-                {{-- RIWAYAT --}}
-                <div class="sidebar-title">Riwayat</div>
+@endif
 
-                <li class="nav-item">
-                    <a href="{{ route('history.index') }}"
-                       class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-clock-rotate-left"></i></span>
-                        <span class="text">Riwayat Transaksi</span>
-                    </a>
-                </li>
+{{-- ADMIN, STAFF, KEPALA --}}
+@if(in_array(Auth::user()->role, ['admin', 'staff', 'kepala']))
 
-            @endif
+    {{-- RIWAYAT --}}
+    <div class="sidebar-title">Riwayat</div>
+
+    <li class="nav-item">
+        <a href="{{ route('history.index') }}"
+           class="nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-clock-rotate-left"></i></span>
+            <span class="text">Riwayat Transaksi</span>
+        </a>
+    </li>
+
+@endif
 
             {{-- SEMUA ROLE --}}
             <div class="sidebar-title">Laporan</div>

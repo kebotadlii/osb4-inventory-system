@@ -35,7 +35,6 @@ class HistoryController extends Controller
      */
     public function export(Request $request)
     {
-        // 🔒 WAJIB PILIH JENIS TRANSAKSI
         if (!$request->filled('type')) {
             return redirect()
                 ->back()
@@ -46,10 +45,6 @@ class HistoryController extends Controller
 
         $filename = 'history-transaksi-' . $typeLabel . '-' . now()->format('Y-m-d_H-i-s') . '.xlsx';
 
-        /**
-         * 🔥 PENTING: BERSIHKAN OUTPUT BUFFER
-         * (INI YANG MENCEGAH FILE CORRUPT)
-         */
         if (ob_get_length()) {
             ob_end_clean();
         }
@@ -68,8 +63,10 @@ class HistoryController extends Controller
      */
     private function baseQuery(Request $request)
     {
-        $query = ItemTransaction::with(['item.category'])
-            ->orderBy('tanggal', 'desc');
+        $query = ItemTransaction::with([
+            'item.category',
+            'user',
+        ])->orderBy('tanggal', 'desc');
 
         /**
          * FILTER BULAN & TAHUN

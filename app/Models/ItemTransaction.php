@@ -14,6 +14,7 @@ class ItemTransaction extends Model
 
     protected $fillable = [
         'item_id',
+        'user_id',
         'type',
         'quantity',
         'price',
@@ -27,7 +28,7 @@ class ItemTransaction extends Model
         'quantity' => 'integer',
         'price'    => 'integer',
         'total'    => 'integer',
-        'tanggal'  => 'datetime', // FIX & KONSISTEN
+        'tanggal'  => 'datetime',
     ];
 
     /*
@@ -38,6 +39,11 @@ class ItemTransaction extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /*

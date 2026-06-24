@@ -121,6 +121,7 @@
                             <th>Kategori</th>
                             <th class="text-center" width="120">Jenis</th>
                             <th class="text-center" width="80">Qty</th>
+                            <th width="180">Diinput Oleh</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,10 +139,11 @@
                                     </span>
                                 </td>
                                 <td class="text-center">{{ $trx->quantity }}</td>
+                                <td>{{ $trx->user->name ?? '-' }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">
+                                <td colspan="7" class="text-center text-muted py-4">
                                     Belum ada data history
                                 </td>
                             </tr>

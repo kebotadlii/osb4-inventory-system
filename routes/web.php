@@ -190,79 +190,80 @@ Route::middleware('auth')->group(function () {
     });
 
     /*
-    |--------------------------------------------------------------------------
-    | ADMIN & STAFF
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware('role:admin,staff')->group(function () {
-
-        /*
-        |--------------------------------------------------------------------------
-        | TRANSACTIONS
-        |--------------------------------------------------------------------------
-        */
-        Route::prefix('transactions')->group(function () {
-
-            Route::get('/in', [ItemTransactionController::class, 'createIn'])
-                ->name('transactions.in.form');
-
-            Route::post('/in', [ItemTransactionController::class, 'storeIn'])
-                ->name('transactions.in.store');
-
-            Route::get('/out', [ItemTransactionController::class, 'createOut'])
-                ->name('transactions.out.form');
-
-            Route::post('/out', [ItemTransactionController::class, 'storeOut'])
-                ->name('transactions.out.store');
-
-            Route::post('/out/import', [ExcelController::class, 'importItemOut'])
-                ->name('transactions.out.import');
-
-            Route::get('/out/import/template', [ExcelController::class, 'downloadItemOutTemplate'])
-                ->name('transactions.out.import.template');
-        });
-
-        /*
-        |--------------------------------------------------------------------------
-        | HISTORY
-        |--------------------------------------------------------------------------
-        */
-        Route::get('/history', [HistoryController::class, 'index'])
-            ->name('history.index');
-
-        Route::get('/history/export', [HistoryController::class, 'export'])
-            ->name('history.export');
-    });
+|--------------------------------------------------------------------------
+| ADMIN & STAFF
+|--------------------------------------------------------------------------
+*/
+Route::middleware('role:admin,staff')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | ADMIN, STAFF, KEPALA
+    | TRANSACTIONS
     |--------------------------------------------------------------------------
     */
-    Route::middleware('role:admin,staff,kepala')->group(function () {
+    Route::prefix('transactions')->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | REPORTS
-        |--------------------------------------------------------------------------
-        */
-        Route::prefix('reports')->group(function () {
+        Route::get('/in', [ItemTransactionController::class, 'createIn'])
+            ->name('transactions.in.form');
 
-            Route::get('/', [ReportController::class, 'stock'])
-                ->name('reports.index');
+        Route::post('/in', [ItemTransactionController::class, 'storeIn'])
+            ->name('transactions.in.store');
 
-            Route::get('/stock', [ReportController::class, 'stock'])
-                ->name('reports.stock');
+        Route::get('/out', [ItemTransactionController::class, 'createOut'])
+            ->name('transactions.out.form');
 
-            Route::get('/stock/export', [ReportController::class, 'exportStock'])
-                ->name('reports.stock.export');
+        Route::post('/out', [ItemTransactionController::class, 'storeOut'])
+            ->name('transactions.out.store');
 
-            Route::get('/expenses', [ReportController::class, 'expenses'])
-                ->name('reports.expenses');
+        Route::post('/out/import', [ExcelController::class, 'importItemOut'])
+            ->name('transactions.out.import');
 
-            Route::get('/expenses/export', [ReportController::class, 'exportExpenses'])
-                ->name('reports.expenses.export');
-        });
+        Route::get('/out/import/template', [ExcelController::class, 'downloadItemOutTemplate'])
+            ->name('transactions.out.import.template');
     });
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN, STAFF, KEPALA
+|--------------------------------------------------------------------------
+*/
+Route::middleware('role:admin,staff,kepala')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | HISTORY
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/history', [HistoryController::class, 'index'])
+        ->name('history.index');
+
+    Route::get('/history/export', [HistoryController::class, 'export'])
+        ->name('history.export');
+
+    /*
+    |--------------------------------------------------------------------------
+    | REPORTS
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('reports')->group(function () {
+
+        Route::get('/', [ReportController::class, 'stock'])
+            ->name('reports.index');
+
+        Route::get('/stock', [ReportController::class, 'stock'])
+            ->name('reports.stock');
+
+        Route::get('/stock/export', [ReportController::class, 'exportStock'])
+            ->name('reports.stock.export');
+
+        Route::get('/expenses', [ReportController::class, 'expenses'])
+            ->name('reports.expenses');
+
+        Route::get('/expenses/export', [ReportController::class, 'exportExpenses'])
+            ->name('reports.expenses.export');
+    });
+});
 
 });

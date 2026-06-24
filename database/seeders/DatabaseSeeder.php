@@ -53,9 +53,9 @@ class DatabaseSeeder extends Seeder
         // AKUN LOGIN 4
         // ===============================
         User::firstOrCreate(
-            ['email' => 'nia@gmail.com'],
+            ['email' => 'adli@gmail.com'],
             [
-                'name' => 'Niaaa',
+                'name' => 'adli',
                 'email_verified_at' => now(),
                 'password' => Hash::make('nia123'),
             ]

@@ -46,6 +46,7 @@ class ItemTransactionController extends Controller
 
             ItemTransaction::create([
                 'item_id'    => $item->id,
+                'user_id'    => auth()->id(),
                 'type'       => ItemTransaction::TYPE_IN,
                 'no_po'      => $request->no_po,
                 'quantity'   => $request->quantity,
@@ -105,6 +106,7 @@ class ItemTransactionController extends Controller
 
             ItemTransaction::create([
                 'item_id'    => $item->id,
+                'user_id'    => auth()->id(),
                 'type'       => ItemTransaction::TYPE_OUT,
                 'quantity'   => $request->quantity,
                 'price'      => $item->price,
@@ -130,7 +132,6 @@ class ItemTransactionController extends Controller
             return null;
         }
 
-        // Jika numeric (dari Excel)
         if (is_numeric($value)) {
             return Carbon::instance(
                 ExcelDate::excelToDateTimeObject($value)
@@ -139,9 +140,8 @@ class ItemTransactionController extends Controller
 
         $value = trim($value);
 
-        // Coba beberapa format umum
         $formats = [
-            'Y-m-d',           // input type="date"
+            'Y-m-d',
             'd/m/Y',
             'd-m-Y',
             'd/m/Y H:i:s',
@@ -152,11 +152,9 @@ class ItemTransactionController extends Controller
             try {
                 return Carbon::createFromFormat($format, $value)->format('Y-m-d');
             } catch (\Exception $e) {
-                // lanjut coba format lain
             }
         }
 
-        // fallback terakhir (auto detect)
         return Carbon::parse($value)->format('Y-m-d');
     }
 }
