@@ -118,14 +118,15 @@ class ExcelController extends Controller
                 }
 
                 ItemTransaction::create([
-                    'item_id'    => $item->id,
-                    'type'       => ItemTransaction::TYPE_IN,
-                    'quantity'   => $qty,
-                    'price'      => $price,
-                    'total'      => $qty * $price,
-                    'no_po'      => $noPo,
-                    'tanggal'    => $tanggal,
-                    'keterangan' => $ket,
+                     'item_id'    => $item->id,
+                     'user_id'    => auth()->id(),
+                     'type'       => ItemTransaction::TYPE_IN,
+                     'quantity'   => $qty,
+                     'price'      => $price,
+                     'total'      => $qty * $price,
+                     'no_po'      => $noPo,
+                     'tanggal'    => $tanggal,
+                     'keterangan' => $ket,
                 ]);
 
                 $item->increment('stock', $qty);

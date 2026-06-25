@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'staff@gmail.com'],
             [
-                'name' => 'staff',
+                'name' => 'Staff Ahmad',
                 'email_verified_at' => now(),
                 'password' => Hash::make('staff123'),
             ]
@@ -49,15 +49,27 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-         // ===============================
+        // ===============================
         // AKUN LOGIN 4
+        // ===============================
+        User::firstOrCreate(
+            ['email' => 'staff2@gmail.com'],
+            [
+                'name' => 'Staff Adli',
+                'email_verified_at' => now(),
+                'password' => Hash::make('staff123'),
+            ]
+        );
+
+         // ===============================
+        // AKUN LOGIN 5
         // ===============================
         User::firstOrCreate(
             ['email' => 'adli@gmail.com'],
             [
-                'name' => 'adli',
+                'name' => 'Admin Adli',
                 'email_verified_at' => now(),
-                'password' => Hash::make('nia123'),
+                'password' => Hash::make('adli123'),
             ]
         );
     }

@@ -129,6 +129,7 @@ class ItemOutImport implements ToCollection
 
                     ItemTransaction::create([
                         'item_id'    => $item->id,
+                        'user_id'    => auth()->id(),
                         'type'       => ItemTransaction::TYPE_OUT,
                         'quantity'   => $qty,
                         'price'      => $item->price,
