@@ -196,19 +196,26 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('role:admin,staff')->group(function () {
 
-    /*
-    |--------------------------------------------------------------------------
-    | TRANSACTIONS
-    |--------------------------------------------------------------------------
-    */
     Route::prefix('transactions')->group(function () {
 
+        // =========================
+        // BARANG MASUK
+        // =========================
         Route::get('/in', [ItemTransactionController::class, 'createIn'])
             ->name('transactions.in.form');
 
         Route::post('/in', [ItemTransactionController::class, 'storeIn'])
             ->name('transactions.in.store');
 
+        Route::post('/in/import', [ExcelController::class, 'importItemIn'])
+            ->name('transactions.in.import');
+
+        Route::get('/in/import/template', [ItemController::class, 'downloadTemplateGlobal'])
+            ->name('transactions.in.import.template');
+
+        // =========================
+        // BARANG KELUAR
+        // =========================
         Route::get('/out', [ItemTransactionController::class, 'createOut'])
             ->name('transactions.out.form');
 

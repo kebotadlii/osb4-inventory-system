@@ -18,6 +18,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Maatwebsite\Excel\Facades\Excel;
 
 // Imports
+use App\Imports\ItemInImport;
 use App\Imports\ItemOutImport;
 
 // Exports
@@ -139,6 +140,29 @@ class ExcelController extends Controller
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | IMPORT BARANG MASUK (HALAMAN TRANSAKSI)
+    |--------------------------------------------------------------------------
+    */
+    public function importItemIn(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        $import = new ItemInImport();
+
+        Excel::import(
+        $import,
+        $request->file('file')
+    );
+
+        return back()
+        ->with('success', 'Import barang masuk selesai')
+        ->with('failed_import', $import->getFailedRows());
     }
 
     /*

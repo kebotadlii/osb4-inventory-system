@@ -24,6 +24,70 @@
         </div>
     @endif
 
+    @if(session('failed_import') && count(session('failed_import')))
+    <div class="alert alert-warning">
+        <strong>Beberapa data gagal diimport:</strong>
+
+        <ul class="mb-0 mt-2">
+            @foreach(session('failed_import') as $fail)
+                <li>
+                    Baris {{ $fail['row'] }}
+                    - {{ $fail['reason'] }}
+                </li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+    {{-- IMPORT EXCEL --}}
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-semibold">
+            Import Barang Masuk
+        </h6>
+
+        <a href="{{ route('transactions.in.import.template') }}"
+           class="btn btn-success btn-sm">
+            Download Template
+        </a>
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST"
+              action="{{ route('transactions.in.import') }}"
+              enctype="multipart/form-data">
+
+            @csrf
+
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">
+                        File Excel
+                    </label>
+
+                    <input type="file"
+                           name="file"
+                           class="form-control"
+                           accept=".xlsx,.xls,.csv"
+                           required>
+                </div>
+
+                <div class="col-md-4">
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Import Excel
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
     {{-- FORM --}}
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-white">
