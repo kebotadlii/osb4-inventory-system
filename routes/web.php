@@ -133,6 +133,16 @@ Route::middleware('auth')->group(function () {
                 ->name('items.destroy');
         });
 
+            }); // Tutup ADMIN ONLY
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN & STAFF - BIAYA OPERASIONAL
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin,staff')->group(function () {
+
         /*
         |--------------------------------------------------------------------------
         | EXPENSE CATEGORIES
@@ -187,8 +197,8 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{expense}', [ExpenseController::class, 'destroy'])
                 ->name('expenses.destroy');
         });
-    });
 
+    });
     /*
 |--------------------------------------------------------------------------
 | ADMIN & STAFF

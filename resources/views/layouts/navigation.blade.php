@@ -36,47 +36,53 @@
             </li>
 
             {{-- ADMIN ONLY --}}
-            @if(Auth::user()->role == 'admin')
+@if(Auth::user()->role == 'admin')
 
-                {{-- MASTER DATA --}}
-                <div class="sidebar-title">Master Data</div>
+    {{-- MASTER DATA --}}
+    <div class="sidebar-title">Master Data</div>
 
-                <li class="nav-item">
-                    <a href="{{ route('categories.index') }}"
-                       class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-tags"></i></span>
-                        <span class="text">Kategori Barang</span>
-                    </a>
-                </li>
+    <li class="nav-item">
+        <a href="{{ route('categories.index') }}"
+           class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-tags"></i></span>
+            <span class="text">Kategori Barang</span>
+        </a>
+    </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('items.index') }}"
-                       class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-box"></i></span>
-                        <span class="text">Data Barang</span>
-                    </a>
-                </li>
+    <li class="nav-item">
+        <a href="{{ route('items.index') }}"
+           class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-box"></i></span>
+            <span class="text">Data Barang</span>
+        </a>
+    </li>
 
-                {{-- BIAYA OPERASIONAL --}}
-                <div class="sidebar-title">Biaya Operasional</div>
+@endif
 
-                <li class="nav-item">
-                    <a href="{{ route('expense.categories.index') }}"
-                       class="nav-link {{ request()->routeIs('expense.categories.*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-layer-group"></i></span>
-                        <span class="text">Kategori Biaya</span>
-                    </a>
-                </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('expenses.index') }}"
-                       class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
-                        <span class="icon"><i class="fas fa-wallet"></i></span>
-                        <span class="text">Data Biaya Masuk</span>
-                    </a>
-                </li>
+            {{-- ADMIN & STAFF --}}
+@if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
 
-            @endif
+    {{-- BIAYA OPERASIONAL --}}
+    <div class="sidebar-title">Biaya Operasional</div>
+
+    <li class="nav-item">
+        <a href="{{ route('expense.categories.index') }}"
+           class="nav-link {{ request()->routeIs('expense.categories.*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-layer-group"></i></span>
+            <span class="text">Kategori Biaya</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ route('expenses.index') }}"
+           class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}">
+            <span class="icon"><i class="fas fa-wallet"></i></span>
+            <span class="text">Data Biaya Masuk</span>
+        </a>
+    </li>
+
+@endif
 
             {{-- ADMIN & STAFF --}}
 @if(Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
@@ -102,7 +108,7 @@
 
 @endif
 
-{{-- ADMIN, STAFF, KEPALA --}}
+            {{-- ADMIN, STAFF, KEPALA --}}
 @if(in_array(Auth::user()->role, ['admin', 'staff', 'kepala']))
 
     {{-- RIWAYAT --}}
